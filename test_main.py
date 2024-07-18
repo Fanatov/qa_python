@@ -33,12 +33,38 @@ class TestBooksCollector:
         book.set_book_genre(name, genre)
         assert genre not in book.genre
 
-    def test_set_book_genre_genre_update(self, book):
-        book.add_new_book(DATA.CORRECT_NAMES[0])
-        book.set_book_genre(DATA.CORRECT_NAMES[0], book.genre[0])
+    def test_set_book_genre_genre_not_update_with_incorrect_data(self, book, correct_pair):
         temp_first_genre = book.books_genre[DATA.CORRECT_NAMES[0]]
         book.set_book_genre(DATA.CORRECT_NAMES[0], "Некорректный Жанр")
         temp_second_genre = book.books_genre[DATA.CORRECT_NAMES[0]]
         assert temp_first_genre == temp_second_genre
 
+    def test_get_book_genre_return_correct_genre(self, book, correct_pair):
+        assert book.get_book_genre(DATA.CORRECT_NAMES[0]) == book.books_genre[DATA.CORRECT_NAMES[0]]
 
+    def test_get_books_with_specific_genre_shows_selected_genre(self, book):
+        book.add_new_book('К9 - Собачья работа')
+        book.set_book_genre('К9 - Собачья работа', 'Комедии')
+        book.add_new_book('Флаббер')
+        book.set_book_genre('Флаббер', 'Комедии')
+        book.add_new_book('Робокоп')
+        book.set_book_genre('Робокоп', 'Фантастика')
+        book.add_new_book('Интерстеллар')
+        book.set_book_genre('Интерстеллар', 'Легенда')
+        book.get_books_with_specific_genre('Легенда')
+
+        assert (('Флаббер' and 'К9 - Собачья работа' in book.get_books_with_specific_genre('Комедии') and
+                 len(book.get_books_with_specific_genre('Комедии')) == 2) and
+                ('Робокоп' in book.get_books_with_specific_genre('Фантастика')) and
+                len(book.get_books_with_specific_genre('Фантастика')) == 1)
+
+    def test_get_books_genre_return_dict(self, book, correct_pair):
+        for key, value in book.get_books_genre().items():
+            assert key == DATA.CORRECT_NAMES[0] and value == book.genre[0]
+
+    def test_get_books_for_children_return_safe_result(self, book, complex_data):
+        for key, value in book.books_genre.items():
+            if value == 'Ужасы' or value == 'Детективы':
+                assert key not in book.get_books_for_children()
+            else:
+                assert key in book.get_books_for_children()
