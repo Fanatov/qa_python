@@ -55,3 +55,32 @@ class BooksCollector:
     # получаем список Избранных книг
     def get_list_of_favorites_books(self):
         return self.favorites
+
+
+book = BooksCollector()
+book.add_new_book('Коррректное имя')
+print(book.books_genre)
+book.add_new_book('Фантастика')
+print(book.books_genre)
+book.add_new_book('Фантастика')
+print(book.books_genre)
+book.add_new_book('40символов_тестовые_пробелы_____________')
+print(book.books_genre)
+book.add_new_book('41символ___тестовые_пробелы______________')
+print(book.books_genre)
+print('zjopa' in book.books_genre)
+book.add_new_book('42символа___тестовые_пробелы______________')
+print(book.books_genre)
+book.add_new_book(' Пробел в начале')
+print(book.books_genre)
+book.add_new_book('                 ')
+print(book.books_genre)
+book.set_book_genre('Фантастика','Ужасы')
+print(book.books_genre)
+book.set_book_genre('Фантастика','неУжасы')
+print(book.books_genre)
+book.set_book_genre('Фантастика','Комедии')
+print(book.books_genre)
+print(book.books_genre['Фантастика'] == 'Комедии')
+book.set_book_genre('Фантастика','ГОВНО')
+print(book.books_genre)
