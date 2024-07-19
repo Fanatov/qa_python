@@ -3,16 +3,8 @@ from main import BooksCollector
 import pytest
 
 
-# класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
-# обязательно указывать префикс Test
 class TestBooksCollector:
 
-    # пример теста:
-    # обязательно указывать префикс test_
-    # дальше идет название метода, который тестируем add_new_book_
-    # затем, что тестируем add_two_books - добавление двух книг
-    # напиши свои тесты ниже
-    # чтобы тесты были независимыми в каждом из них создавай отдельный экземпляр класса BooksCollector()
     @pytest.mark.parametrize('correct_name', DATA.CORRECT_NAMES)
     def test_add_new_book_correct_input(self, book, correct_name):
         book.add_new_book(correct_name)
@@ -68,3 +60,32 @@ class TestBooksCollector:
                 assert key not in book.get_books_for_children()
             else:
                 assert key in book.get_books_for_children()
+
+    def test_add_book_in_favorites_adds_books(self, book, complex_data):
+        book.add_book_in_favorites('НЕ Детское кино - 3')
+        book.add_book_in_favorites('Не добавленное кино')
+        book.add_book_in_favorites('Детское кино - 1')
+        book.add_book_in_favorites('Детское кино - 1')
+        assert (len(book.favorites) == 2 and 'Не добавленное кино' not in book.favorites and 'НЕ Детское кино - 3' in
+                book.favorites and 'Детское кино - 1' in book.favorites)
+
+    def test_delete_book_from_favorites_deletes_chosen_name(self, book, complex_data):
+        book.add_book_in_favorites('НЕ Детское кино - 3')
+        book.add_book_in_favorites('Не добавленное кино')
+        book.add_book_in_favorites('Детское кино - 1')
+        book.add_book_in_favorites('Детское кино - 1')
+        book.add_book_in_favorites('Детское кино - 3')
+        book.delete_book_from_favorites('Детское кино - 1')
+        book.delete_book_from_favorites('Детское кино - 1')
+        assert (len(book.favorites) == 2 and 'Не добавленное кино' not in book.favorites and 'НЕ Детское кино - 3' in
+                book.favorites and 'Детское кино - 3' in book.favorites and 'Детское кино - 1' not in book.favorites)
+
+    def test_get_list_of_favorites_books_return_created_list(self,book,complex_data):
+        book.add_book_in_favorites('НЕ Детское кино - 3')
+        book.add_book_in_favorites('Не добавленное кино')
+        book.add_book_in_favorites('Детское кино - 1')
+        book.add_book_in_favorites('Детское кино - 1')
+        book.add_book_in_favorites('Детское кино - 3')
+        assert ((len(book.get_list_of_favorites_books()) == 3 and 'НЕ Детское кино - 3'
+                in book.get_list_of_favorites_books()) and 'Детское кино - 1' in book.get_list_of_favorites_books() and
+                'Детское кино - 3' in book.get_list_of_favorites_books())
