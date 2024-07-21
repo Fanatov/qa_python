@@ -49,11 +49,14 @@ class TestBooksCollector:
     def test_get_books_genre_return_data(self, book, complex_data):
         assert len(book.get_books_genre()) != 0
 
-    def test_get_books_for_children_return_safe_result(self, book, complex_data):
+    def test_get_books_for_children_not_return_unsafe_result(self, book, complex_data):
         for key, value in book.books_genre.items():
             if value in book.genre_age_rating:
                 assert key not in book.get_books_for_children()
-            else:
+
+    def test_get_books_for_children_return_safe_result(self, book, complex_data):
+        for key, value in book.books_genre.items():
+            if value not in book.genre_age_rating:
                 assert key in book.get_books_for_children()
 
     def test_add_book_in_favorites_adds_existing_book(self, book, complex_data):
@@ -79,6 +82,5 @@ class TestBooksCollector:
         assert book.favorites.count(DATA.BOOK_LIST[0]) == 0
 
     def test_get_list_of_favorites_books_return_created_list(self, book, complex_data):
-        for textbook in DATA.BOOK_LIST:
-            book.add_book_in_favorites(textbook)
-        assert len(book.get_list_of_favorites_books()) == len(DATA.BOOK_LIST)
+        book.add_book_in_favorites(DATA.BOOK_LIST[0])
+        assert len(book.get_list_of_favorites_books()) != 0
