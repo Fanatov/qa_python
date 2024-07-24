@@ -50,14 +50,12 @@ class TestBooksCollector:
         assert len(book.get_books_genre()) != 0
 
     def test_get_books_for_children_not_return_unsafe_result(self, book, complex_data):
-        for key, value in book.books_genre.items():
-            if value in book.genre_age_rating:
-                assert key not in book.get_books_for_children()
+        assert (book.books_genre[DATA.BOOK_LIST[1]] in book.genre_age_rating and DATA.BOOK_LIST[1] not in
+                book.get_books_for_children())
 
     def test_get_books_for_children_return_safe_result(self, book, complex_data):
-        for key, value in book.books_genre.items():
-            if value not in book.genre_age_rating:
-                assert key in book.get_books_for_children()
+        assert (book.books_genre[DATA.BOOK_LIST[0]] not in book.genre_age_rating and DATA.BOOK_LIST[0] in
+                book.get_books_for_children())
 
     def test_add_book_in_favorites_adds_existing_book(self, book, complex_data):
         book.add_book_in_favorites(DATA.BOOK_LIST[2])
